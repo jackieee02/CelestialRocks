@@ -10,6 +10,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 [&_input]:w-full [&_input]:p-3 [&_input]:rounded-lg [&_input]:bg-gray-700 [&_input]:border [&_input]:border-gray-600 [&_input]:text-white [&_select]:w-full [&_select]:p-3 [&_select]:rounded-lg [&_select]:bg-gray-700 [&_select]:border [&_select]:border-gray-600 [&_select]:text-white [&_label]:block [&_label]:text-sm [&_label]:font-medium [&_label]:text-gray-300 [&_label]:mb-2">
                 <div>{{ form.as_p }}</div>
             </div>
+            <div class="flex items-center gap-2 text-green-500">
+                        <input type="radio" name="available" value="true" checked> Available
+                    </div>
+                    <div class="flex items-center gap-2 text-red-500">
+                        <input type="radio" name="available" value="false"> Unavailable
+                    </div>
             {% if drink.image %}
             <div class="bg-gray-700 p-4 rounded-lg border border-gray-600">
                 <p class="text-xs text-gray-400 mb-2">Current Image</p>

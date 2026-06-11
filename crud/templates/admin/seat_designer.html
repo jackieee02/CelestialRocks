@@ -2,7 +2,10 @@
 
 {% block content %}
 <div class="p-6 bg-gray-900 min-h-screen text-gray-100">
-    <h1 class="text-3xl font-bold mb-6 text-primary">Club Floor Layout Designer</h1>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-primary">Club Floor Layout Designer</h1>
+        <a href="{% url 'add_seat' %}" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded font-bold">+ Add Seat</a>
+    </div>
     
     <!-- Floor Plan Area -->
     <div id="floor-plan" class="relative border-4 border-gray-700 bg-gray-950 rounded-lg overflow-hidden cursor-crosshair" style="width: 100%; height: 700px;">
