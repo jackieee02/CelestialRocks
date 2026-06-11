@@ -53,6 +53,7 @@ class DrinkForm(forms.ModelForm):
         model = Drink
         fields = ['name', 'category', 'price', 'image', 'is_available']
 
+
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
