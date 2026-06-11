@@ -1,32 +1,71 @@
 {% extends 'layout/base.html' %}
+
 {% block content %}
-<div class="p-6 bg-gray-900 min-h-screen text-gray-100">
-    <div class="bg-gradient-to-r from-purple-700 to-yellow-600 rounded-2xl p-8 mb-8 text-white shadow-lg">
-        <h1 class="text-4xl font-bold mb-2">✏ Edit Drink</h1>
+<div class="p-6 bg-gray-950 min-h-screen text-gray-100">
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r from-purple-900 to-yellow-900 rounded-2xl p-8 mb-8 text-white shadow-2xl border border-gold/30">
+        <h1 class="text-4xl font-black mb-2">✏ Edit Drink</h1>
+        <p class="text-lg opacity-90">Modify details for "{{ drink.name }}"</p>
     </div>
-    <div class="max-w-4xl mx-auto bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700">
-        <form method="post" enctype="multipart/form-data" class="space-y-6">
-            {% csrf_token %}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 [&_input]:w-full [&_input]:p-3 [&_input]:rounded-lg [&_input]:bg-gray-700 [&_input]:border [&_input]:border-gray-600 [&_input]:text-white [&_select]:w-full [&_select]:p-3 [&_select]:rounded-lg [&_select]:bg-gray-700 [&_select]:border [&_select]:border-gray-600 [&_select]:text-white [&_label]:block [&_label]:text-sm [&_label]:font-medium [&_label]:text-gray-300 [&_label]:mb-2">
-                <div>{{ form.as_p }}</div>
-            </div>
-            <div class="flex items-center gap-2 text-green-500">
-                        <input type="radio" name="available" value="true" checked> Available
+
+    <!-- Main Content -->
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Edit Form -->
+        <div class="bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700">
+            <h2 class="text-xl font-bold mb-6 text-white">Drink Details</h2>
+            <form method="post" class="space-y-6" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="space-y-4 [&_input]:w-full [&_input]:p-3 [&_input]:rounded-lg [&_input]:bg-gray-700 [&_input]:border [&_input]:border-gray-600 [&_input]:text-white [&_select]:w-full [&_select]:p-3 [&_select]:rounded-lg [&_select]:bg-gray-700 [&_select]:border [&_select]:border-gray-600 [&_select]:text-white [&_label]:block [&_label]:text-sm [&_label]:font-medium [&_label]:text-gray-300 [&_label]:mb-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Drink Name</label>
+                        {{ form.name }}
                     </div>
-                    <div class="flex items-center gap-2 text-red-500">
-                        <input type="radio" name="available" value="false"> Unavailable
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Category</label>
+                        {{ form.category }}
                     </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Price (₱)</label>
+                        {{ form.price }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Image</label>
+                        {{ form.image }}
+                    </div>
+                    <div class="flex items-center gap-3">
+                        {{ form.is_available }}
+                        <label class="text-sm font-medium text-gray-300">Available on Menu</label>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-end gap-4 mt-8">
+                    <a href="{% url 'manage_menu' %}" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition">Cancel</a>
+                    <button type="submit" class="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg transition">Save Changes</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Preview -->
+        <div class="space-y-8">
             {% if drink.image %}
-            <div class="bg-gray-700 p-4 rounded-lg border border-gray-600">
-                <p class="text-xs text-gray-400 mb-2">Current Image</p>
-                <img src="{{ drink.image.url }}" alt="{{ drink.name }}" class="w-32 h-32 object-cover rounded">
+            <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700">
+                <h2 class="text-xl font-bold mb-4 text-purple-400">Current Drink</h2>
+                <img src="{{ drink.image.url }}" alt="{{ drink.name }}" class="w-full h-64 object-cover rounded-lg">
+                <div class="mt-4">
+                    <p class="text-2xl font-bold text-white">{{ drink.name }}</p>
+                    <p class="text-gray-400">{{ drink.category.name }}</p>
+                    <p class="text-gold font-bold text-lg">₱{{ drink.price }}</p>
+                </div>
             </div>
             {% endif %}
-            <div class="flex justify-end gap-4 mt-8">
-                <a href="{% url 'manage_menu' %}" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition">Cancel</a>
-                <button type="submit" class="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg transition">Save Changes</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
+<style>
+    input:focus, select:focus { outline: 2px solid #d4af37; }
+    input[type="checkbox"] { accent-color: #d4af37; }
+</style>
 {% endblock %}
