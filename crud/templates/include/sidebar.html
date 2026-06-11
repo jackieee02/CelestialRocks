@@ -1,0 +1,26 @@
+<aside class="sticky top-[69px] hidden h-[calc(100vh-69px)] w-72 shrink-0 border-r border-white/10 bg-nebula/70 p-4 shadow-2xl shadow-black/20 backdrop-blur-xl lg:block">
+    <div class="mb-5 rounded-lg border border-white/10 bg-white/5 p-4">
+        <p class="text-xs uppercase tracking-[0.24em] text-gold">Control Deck</p>
+        <p class="mt-1 text-sm text-slate-300">Role tools for {{ user.role }}</p>
+    </div>
+    <ul class="space-y-2 text-sm font-semibold">
+        {% if user.role == 'admin' %}
+        <li><a href="{% url 'admin_dashboard' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Admin Dashboard</a></li>
+        <li><a href="{% url 'manage_menu' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Menu Management</a></li>
+        <li><a href="{% url 'manage_inventory' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Inventory Management</a></li>
+        <li><a href="{% url 'seat_designer' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Seat Management</a></li>
+        <li><a href="{% url 'admin_orders' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Order Management</a></li>
+        <li><a href="{% url 'admin_review_proposals' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Drink Proposals</a></li>
+        <li><a href="{% url 'admin_sales_report' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Sales Reports</a></li>
+        <li><a href="{% url 'manage_bartenders' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Manage Bartenders</a></li>
+        <li><a href="{% url 'manage_customers' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Manage Customers</a></li>
+        {% elif user.role == 'bartender' %}
+        <li><a href="{% url 'bartender_dashboard' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Bartender Dashboard</a></li>
+        <li><a href="{% url 'bartender_orders' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Orders Management</a></li>
+        <li><a href="{% url 'bartender_seats' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Seat Overview</a></li>
+        <li><a href="{% url 'bartender_inventory' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Inventory Management</a></li>
+        <li><a href="{% url 'drink_proposals' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">Proposals</a></li>
+        <li><a href="{% url 'bartender_profile' %}" class="block rounded-lg border border-transparent px-3 py-2 text-slate-200 transition hover:border-primary/30 hover:bg-primary/10 hover:text-primary">My Profile</a></li>
+        {% endif %}
+    </ul>
+</aside>

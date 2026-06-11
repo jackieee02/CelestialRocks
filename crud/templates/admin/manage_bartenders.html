@@ -1,0 +1,103 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<style>
+    .bartender-form input {
+        width: 100%;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        background: rgba(7, 8, 18, 0.92);
+        padding: 0.75rem 1rem;
+        color: #f8fafc;
+        outline: none;
+    }
+
+    .bartender-form input:focus {
+        border-color: #67E8F9;
+        box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.14);
+    }
+</style>
+<section class="mx-auto max-w-7xl space-y-6">
+    <div class="rounded-lg border border-white/10 bg-white/4 p-6 shadow-2xl shadow-black/20">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+                <p class="text-sm font-bold uppercase tracking-[0.3em] text-gold">Staff Management</p>
+                <h1 class="mt-2 text-4xl font-black text-white">Bartenders</h1>
+                <p class="mt-2 text-slate-300">Add staff, review accounts, and keep the team list organized.</p>
+            </div>
+            <form method="get" class="flex items-center gap-2 rounded-full border border-white/10 bg-midnight/70 p-1.5">
+                <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search bartenders..." class="w-44 rounded-full border-0 bg-transparent px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:ring-0 sm:w-56">
+                <button type="submit" class="rounded-full bg-primary px-4 py-2 text-sm font-black text-midnight">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+        <form method="post" class="bartender-form rounded-lg border border-white/10 bg-white/[0.04] p-6 shadow-xl shadow-black/20">
+            {% csrf_token %}
+            <div class="mb-5">
+                <h2 class="text-2xl font-black text-white">Add Bartender</h2>
+                <p class="mt-1 text-sm text-slate-400">Create a staff account with bartender access.</p>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-300" for="{{ form.username.id_for_label }}">Username</label>
+                    {{ form.username }}
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-300" for="{{ form.first_name.id_for_label }}">First Name</label>
+                    {{ form.first_name }}
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-300" for="{{ form.last_name.id_for_label }}">Last Name</label>
+                    {{ form.last_name }}
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-300" for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}
+                </div>
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-300" for="{{ form.password.id_for_label }}">Password</label>
+                    {{ form.password }}
+                </div>
+            </div>
+
+            <button type="submit" class="mt-6 rounded-lg bg-secondary px-4 py-3 font-black text-white">Add Bartender</button>
+        </form>
+
+        <div class="overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] shadow-xl shadow-black/20">
+            <table class="w-full text-left">
+                <thead>
+                    <tr>
+                        <th class="p-4">Image</th>
+                        <th class="p-4">Username</th>
+                        <th class="p-4">Email</th>
+                        <th class="p-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/10">
+                {% for bartender in bartenders %}
+                    <tr>
+                        <td class="p-4">
+                            {% if bartender.profile_image %}
+                                <img src="{{ bartender.profile_image.url }}" alt="{{ bartender.username }}" class="w-10 h-10 rounded-full object-cover">
+                            {% else %}
+                                <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center font-bold text-xs">{{ bartender.username|slice:":2"|upper }}</div>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 font-semibold text-white">{{ bartender.username }}</td>
+                        <td class="p-4 text-slate-200">{{ bartender.email }}</td>
+                        <td class="p-4 flex gap-3">
+                            <a href="{% url 'edit_bartender' bartender.id %}" class="text-blue-400 hover:text-blue-300" title="Edit">✏️</a>
+                            <a href="{% url 'delete_bartender' bartender.id %}" class="text-red-400 hover:text-red-300" title="Delete">🗑️</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="p-6 text-slate-400">No bartenders found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

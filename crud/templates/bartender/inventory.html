@@ -1,0 +1,41 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<section class="mx-auto max-w-6xl space-y-6">
+    <div class="rounded-lg border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/20">
+        <p class="text-sm font-bold uppercase tracking-[0.3em] text-gold">Inventory Management</p>
+        <h1 class="mt-2 text-4xl font-black text-white">Ingredient Overview</h1>
+    </div>
+
+    <div class="overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] shadow-xl shadow-black/20">
+        <table class="w-full text-left">
+            <thead>
+                <tr>
+                    <th class="p-4">Image</th>
+                    <th class="p-4">Ingredient</th>
+                    <th class="p-4">Stock Level</th>
+                    <th class="p-4">Threshold</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/10">
+                {% for ing in ingredients %}
+                <tr>
+                    <td class="p-4">
+                        {% if ing.image %}
+                            <img src="{{ ing.image.url }}" alt="{{ ing.name }}" class="h-10 w-10 rounded-lg object-cover">
+                        {% else %}
+                            <div class="h-10 w-10 rounded-lg border border-white/10 bg-white/5"></div>
+                        {% endif %}
+                    </td>
+                    <td class="p-4 font-semibold text-white">{{ ing.name }}</td>
+                    <td class="p-4 text-slate-200">{{ ing.stock_level }}</td>
+                    <td class="p-4 text-slate-200">{{ ing.low_stock_threshold }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="p-6 text-slate-400">No ingredients found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

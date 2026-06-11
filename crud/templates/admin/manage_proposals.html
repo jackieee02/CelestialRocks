@@ -1,0 +1,24 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<div class="p-6 bg-gray-950 min-h-screen text-gray-100">
+    <h1 class="text-3xl font-bold mb-6 text-primary">Pending Drink Proposals</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for prop in proposals %}
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg">
+            <h2 class="text-xl font-bold text-white mb-2">{{ prop.name }}</h2>
+            <p class="text-gray-400 text-sm mb-2">By: {{ prop.bartender.username }}</p>
+            <p class="text-sm mb-4">{{ prop.ingredients }}</p>
+            <p class="text-gold font-bold mb-6">Suggested Price: ₱{{ prop.suggested_price }}</p>
+            
+            <div class="flex gap-4">
+                <a href="{% url 'update_proposal_status' prop.id 'approved' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-bold">Approve</a>
+                <a href="{% url 'update_proposal_status' prop.id 'rejected' %}" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded font-bold">Reject</a>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-gray-500">No pending proposals to review.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

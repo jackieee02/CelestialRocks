@@ -1,0 +1,33 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<section class="mx-auto max-w-5xl space-y-6">
+    <div class="rounded-lg border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/20">
+        <div class="flex items-center justify-between gap-4">
+            <div>
+                <p class="text-sm font-bold uppercase tracking-[0.3em] text-gold">Menu Management</p>
+                <h1 class="mt-2 text-4xl font-black text-white">Categories</h1>
+            </div>
+            <a href="{% url 'add_category' %}" class="rounded-full bg-secondary px-4 py-2 text-sm font-black text-white">Add Category</a>
+        </div>
+    </div>
+
+    <div class="overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] shadow-xl shadow-black/20">
+        <table class="w-full text-left">
+            <thead>
+                <tr>
+                    <th class="p-4">Name</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/10">
+                {% for category in categories %}
+                <tr>
+                    <td class="p-4 font-semibold text-white">{{ category.name }}</td>
+                </tr>
+                {% empty %}
+                <tr><td class="p-6 text-slate-400">No categories yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

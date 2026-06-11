@@ -1,0 +1,77 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="p-6 bg-gray-950 min-h-screen text-gray-100">
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r from-purple-900 to-yellow-900 rounded-2xl p-8 mb-8 text-white shadow-2xl border border-gold/30">
+        <h1 class="text-4xl font-black mb-2">📸 Profile Studio</h1>
+        <p class="text-lg opacity-90">Customize your profile image and personal identity inside Celestia Rock.</p>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Current Avatar -->
+        <div class="lg:col-span-1 bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700 flex flex-col items-center">
+            <h2 class="text-xl font-bold mb-6 text-gold">Current Avatar</h2>
+            {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}" alt="{{ user.username }}" class="w-48 h-48 rounded-full border-4 border-gold shadow-2xl shadow-gold/20 object-cover mb-6">
+            {% else %}
+                <div class="w-48 h-48 rounded-full bg-gray-700 border-4 border-gold flex items-center justify-center text-6xl font-black mb-6 shadow-2xl shadow-gold/20">{{ user.username|slice:":2"|upper }}</div>
+            {% endif %}
+            <h3 class="text-2xl font-bold">{{ user.first_name }} {{ user.last_name }}</h3>
+            <p class="text-purple-400">{{ user.role|title }}</p>
+            <span class="mt-2 px-3 py-1 bg-green-900/30 text-green-400 rounded-full text-xs font-bold border border-green-700">🟢 Active Staff</span>
+        </div>
+
+        <!-- Upload & Actions -->
+        <div class="lg:col-span-2 space-y-8">
+            <div class="bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700">
+                <h2 class="text-xl font-bold mb-6 text-white">Upload New Profile Image</h2>
+                <form method="post" enctype="multipart/form-data" class="space-y-6">
+                    {% csrf_token %}
+                    <div class="border-2 border-dashed border-gray-600 rounded-xl p-10 text-center hover:border-gold transition cursor-pointer">
+                        {{ form.profile_image }}
+                        <p class="text-sm text-gray-400 mt-4">Drag & drop or click to browse</p>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex justify-end gap-4 mt-8">
+                        <a href="{% url 'bartender_profile' %}" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition">Back to Profile</a>
+                        <button type="reset" class="px-6 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition">Reset</button>
+                        <button type="submit" class="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg transition">Save Image</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Guidelines & Completion -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                    <h2 class="text-lg font-bold mb-3 text-cyan-400">📋 Image Guidelines</h2>
+                    <ul class="text-sm text-gray-400 space-y-1">
+                        <li>• JPG, PNG, WEBP formats</li>
+                        <li>• Maximum size 5MB</li>
+                        <li>• Square images recommended</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center">
+                    <h2 class="text-lg font-bold mb-3 text-white">Profile Completion</h2>
+                    <div class="w-full bg-gray-700 rounded-full h-4 mb-2">
+                        <div class="bg-gradient-to-r from-purple-500 to-gold h-4 rounded-full" style="width: 85%"></div>
+                    </div>
+                    <p class="text-sm text-gray-400">85% Complete</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    input[type="file"] {
+        width: 100%;
+        color: white;
+        text-align: center;
+    }
+</style>
+{% endblock %}

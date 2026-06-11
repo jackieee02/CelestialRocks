@@ -1,0 +1,63 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<section class="mx-auto max-w-5xl space-y-6">
+    <div class="rounded-lg border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/20">
+        <p class="text-sm font-bold uppercase tracking-[0.3em] text-gold">Sales Report</p>
+        <h1 class="mt-2 text-4xl font-black text-white">Revenue Overview</h1>
+    </div>
+
+    <form method="get" class="flex flex-col gap-3 rounded-lg border border-white/10 bg-white/[0.04] p-4 shadow-xl shadow-black/20 sm:flex-row sm:items-center">
+        <select name="filter" class="rounded-lg border border-white/10 bg-midnight px-4 py-3 text-white">
+            <option value="day" {% if filter_type == 'day' %}selected{% endif %}>Day</option>
+            <option value="week" {% if filter_type == 'week' %}selected{% endif %}>Week</option>
+            <option value="month" {% if filter_type == 'month' %}selected{% endif %}>Month</option>
+        </select>
+        <input type="date" name="date" value="{{ date }}" class="rounded-lg border border-white/10 bg-midnight px-4 py-3 text-white">
+        <button type="submit" class="rounded-lg bg-primary px-5 py-3 font-black text-midnight">Filter</button>
+    </form>
+
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div class="rounded-lg border border-white/10 bg-white/[0.04] p-6 shadow-xl shadow-black/20">
+            <p class="text-xs font-bold uppercase tracking-[0.22em] text-slate-400">Total Orders</p>
+            <p class="mt-2 text-4xl font-black text-gold">{{ total_orders }}</p>
+        </div>
+        <div class="rounded-lg border border-white/10 bg-white/[0.04] p-6 shadow-xl shadow-black/20">
+            <p class="text-xs font-bold uppercase tracking-[0.22em] text-slate-400">Total Revenue</p>
+            <p class="mt-2 text-4xl font-black text-primary">${{ total_revenue }}</p>
+        </div>
+    </div>
+
+    <div class="rounded-lg border border-white/10 bg-white/[0.04] p-6 shadow-xl shadow-black/20">
+        <h2 class="mb-4 text-xl font-black text-white">Sales Analytics</h2>
+        <canvas id="salesChart" class="h-64 w-full"></canvas>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [{% for label in chart_labels %}'{{ label }}',{% endfor %}],
+            datasets: [{
+                label: 'Revenue ($)',
+                data: [{% for data in chart_data %}{{ data }},{% endfor %}],
+                borderColor: '#67E8F9',
+                backgroundColor: 'rgba(103, 232, 249, 0.12)',
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true, ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(255,255,255,0.08)' } },
+                x: { ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(255,255,255,0.04)' } }
+            },
+            plugins: { legend: { labels: { color: '#e2e8f0' } } }
+        }
+    });
+</script>
+{% endblock %}

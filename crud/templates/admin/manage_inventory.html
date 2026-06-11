@@ -1,0 +1,84 @@
+{% extends 'layout/base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="p-6 bg-gray-950 min-h-screen text-gray-100">
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r from-purple-700 to-yellow-600 rounded-2xl p-8 mb-8 text-white shadow-lg flex justify-between items-center">
+        <div>
+            <h1 class="text-4xl font-bold mb-2">📦 Inventory Management</h1>
+            <p class="text-lg opacity-90">Track ingredients used in drinks and monitor stock levels.</p>
+        </div>
+        <div class="flex gap-4">
+            <div class="bg-black/20 p-4 rounded-lg text-center"><span class="block text-xs uppercase text-gold">Ingredients</span><p class="text-2xl font-bold">{{ stats.total }}</p></div>
+            <div class="bg-black/20 p-4 rounded-lg text-center"><span class="block text-xs uppercase text-gold">Alerts</span><p class="text-2xl font-bold text-red-400">{{ stats.critical }}</p></div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center"><h3 class="text-gray-400 text-xs uppercase">Total</h3><p class="text-3xl font-bold text-white">{{ stats.total }}</p></div>
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center"><h3 class="text-gray-400 text-xs uppercase">Healthy</h3><p class="text-3xl font-bold text-green-500">{{ stats.healthy }}</p></div>
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center"><h3 class="text-gray-400 text-xs uppercase">Low</h3><p class="text-3xl font-bold text-yellow-500">{{ stats.low }}</p></div>
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center"><h3 class="text-gray-400 text-xs uppercase">Critical</h3><p class="text-3xl font-bold text-red-500">{{ stats.critical }}</p></div>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-6">
+        <div class="flex justify-between items-center mb-6">
+            <form method="get" class="flex gap-4">
+                <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search ingredients..." class="bg-gray-700 border border-gray-600 p-2 rounded text-white">
+                <button type="submit" class="bg-purple-600 px-4 py-2 rounded text-white">Search</button>
+            </form>
+            <a href="{% url 'add_ingredient' %}" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded font-bold">+ Add Ingredient</a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-gray-400 border-b border-gray-700">
+                        <th class="p-4">Ingredient</th>
+                        <th class="p-4">Stock</th>
+                        <th class="p-4">Threshold</th>
+                        <th class="p-4">Health</th>
+                        <th class="p-4">Status</th>
+                        <th class="p-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ing in ingredients %}
+                    <tr class="border-b border-gray-700 hover:bg-gray-750 transition">
+                        <td class="p-4 flex items-center gap-3">
+                            {% if ing.image %}
+                                <img src="{{ ing.image.url }}" alt="{{ ing.name }}" class="w-10 h-10 rounded-lg object-cover">
+                            {% else %}
+                                <div class="w-10 h-10 rounded-lg bg-gray-700 flex items-center justify-center font-bold">{{ ing.name|slice:":1" }}</div>
+                            {% endif %}
+                            {{ ing.name }}
+                        </td>
+                        <td class="p-4">{{ ing.stock_level }}</td>
+                        <td class="p-4">{{ ing.low_stock_threshold }}</td>
+                        <td class="p-4 w-40">
+                            <div class="w-full bg-gray-700 rounded-full h-2">
+                                <div class="{% if ing.stock_level < ing.low_stock_threshold %}bg-red-500{% elif ing.stock_level < ing.low_stock_threshold|add:5 %}bg-yellow-500{% else %}bg-green-500{% endif %} h-2 rounded-full" 
+                                     style="width: {% widthratio ing.stock_level 50 100 %}%"></div>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            {% if ing.stock_level < ing.low_stock_threshold %}<span class="text-red-500 text-xs font-bold">🔴 Critical</span>
+                            {% elif ing.stock_level < ing.low_stock_threshold|add:5 %}<span class="text-yellow-500 text-xs font-bold">🟡 Low Stock</span>
+                            {% else %}<span class="text-green-500 text-xs font-bold">🟢 Healthy</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 flex gap-3">
+                            <a href="{% url 'edit_ingredient' ing.id %}" class="text-blue-400" title="Edit">✏️</a>
+                            <a href="{% url 'delete_ingredient' ing.id %}" class="text-red-400" title="Delete">🗑️</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

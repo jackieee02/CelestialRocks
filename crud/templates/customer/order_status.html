@@ -1,0 +1,80 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<div class="p-6 bg-gray-900 min-h-screen text-gray-100">
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r from-purple-700 to-yellow-600 rounded-2xl p-8 mb-8 text-white shadow-lg">
+        <h1 class="text-4xl font-bold mb-2">📜 Order History</h1>
+        <p class="text-lg opacity-90">Track your drinks, seats, and order progress.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gray-800 p-6 rounded-xl shadow border border-gray-700 text-center">
+            <h3 class="text-gray-400 text-xs uppercase">Total Orders</h3>
+            <p class="text-3xl font-bold text-white">{{ stats.total_orders }}</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-xl shadow border border-gray-700 text-center">
+            <h3 class="text-gray-400 text-xs uppercase">Total Spent</h3>
+            <p class="text-3xl font-bold text-yellow-500">₱{{ stats.total_spent|floatformat:2 }}</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-xl shadow border border-gray-700 text-center">
+            <h3 class="text-gray-400 text-xs uppercase">Drinks Ordered</h3>
+            <p class="text-3xl font-bold text-white">{{ stats.total_drinks }}</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-xl shadow border border-gray-700 text-center">
+            <h3 class="text-gray-400 text-xs uppercase">Seats Reserved</h3>
+            <p class="text-3xl font-bold text-purple-500">{{ stats.total_seats }}</p>
+        </div>
+    </div>
+
+    <!-- Orders List -->
+    {% if orders %}
+    <div class="space-y-4">
+        {% for order in orders %}
+        <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-purple-500 transition shadow-lg">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="text-xl font-bold text-white">Order #{{ order.id }}</h3>
+                    <p class="text-sm text-gray-400">{{ order.created_at|date:"F j, Y, g:i a" }}</p>
+                    <p class="text-sm text-gray-300 mt-2">Seat: <span class="font-bold">{{ order.seat_reservation.seat.seat_number }}</span></p>
+                </div>
+                <div class="text-right">
+                    <p class="text-2xl font-bold text-yellow-500 mb-2">₱{{ order.total_price }}</p>
+                    {% if order.status == 'pending' %}<span class="bg-yellow-900 text-yellow-200 px-3 py-1 rounded-full text-xs font-bold">🟡 Pending</span>
+                    {% elif order.status == 'preparing' %}<span class="bg-blue-900 text-blue-200 px-3 py-1 rounded-full text-xs font-bold">🔵 Preparing</span>
+                    {% elif order.status == 'completed' %}<span class="bg-green-900 text-green-200 px-3 py-1 rounded-full text-xs font-bold">🟢 Completed</span>
+                    {% else %}<span class="bg-red-900 text-red-200 px-3 py-1 rounded-full text-xs font-bold">🔴 Cancelled</span>
+                    {% endif %}
+                </div>
+            </div>
+            <button onclick="toggleDetails('details-{{ order.id }}')" class="mt-4 text-primary hover:text-cyan-300 font-bold text-sm">View Details</button>
+            
+            <div id="details-{{ order.id }}" class="hidden mt-4 pt-4 border-t border-gray-700">
+                <h4 class="font-bold text-white mb-2">Items:</h4>
+                <ul class="text-sm text-gray-300 list-disc list-inside">
+                    {% for item in order.items.all %}
+                        <li>{{ item.drink.name }} x{{ item.quantity }}</li>
+                    {% endfor %}
+                </ul>
+                {% if order.status == 'completed' %}
+                <a href="#" class="mt-4 inline-block bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded font-bold text-sm">🔄 Reorder Drinks</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20 text-gray-400">
+        <h2 class="text-4xl font-bold mb-4 text-gray-500">🍸 No Orders Yet</h2>
+        <p class="mb-8">You haven't placed any orders.</p>
+        <a href="{% url 'menu' %}" class="bg-yellow-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-yellow-700">Browse Drinks</a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    function toggleDetails(id) {
+        document.getElementById(id).classList.toggle('hidden');
+    }
+</script>
+{% endblock %}

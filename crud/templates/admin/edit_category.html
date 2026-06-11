@@ -1,0 +1,20 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<div class="p-6 bg-gray-900 min-h-screen text-gray-100">
+    <div class="bg-gradient-to-r from-purple-700 to-yellow-600 rounded-2xl p-8 mb-8 text-white shadow-lg">
+        <h1 class="text-4xl font-bold mb-2">✏ Edit Category</h1>
+    </div>
+    <div class="max-w-4xl mx-auto bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700">
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            <div class="[&_input]:w-full [&_input]:p-3 [&_input]:rounded-lg [&_input]:bg-gray-700 [&_input]:border [&_input]:border-gray-600 [&_input]:text-white [&_textarea]:w-full [&_textarea]:p-3 [&_textarea]:rounded-lg [&_textarea]:bg-gray-700 [&_textarea]:border [&_textarea]:border-gray-600 [&_textarea]:text-white [&_label]:block [&_label]:text-sm [&_label]:font-medium [&_label]:text-gray-300 [&_label]:mb-2">
+                {{ form.as_p }}
+            </div>
+            <div class="flex justify-end gap-4 mt-8">
+                <a href="{% url 'manage_menu' %}" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition">Cancel</a>
+                <button type="submit" class="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg transition">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Verification | Celestia Rocks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#67E8F9',
+                        secondary: '#D946EF',
+                        gold: '#F8C471',
+                        midnight: '#070812'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="relative flex min-h-screen items-center justify-center overflow-hidden bg-midnight p-4 text-white">
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_15%,rgba(103,232,249,0.22),transparent_30%),radial-gradient(circle_at_82%_8%,rgba(217,70,239,0.18),transparent_28%),linear-gradient(135deg,#070812_0%,#11162b_45%,#090713_100%)]"></div>
+    <div class="pointer-events-none absolute inset-0 opacity-35 bg-[radial-gradient(circle,rgba(255,255,255,0.55)_1px,transparent_1.5px)] [background-size:34px_34px]"></div>
+    <div class="relative w-full max-w-md rounded-lg border border-white/10 bg-white/5 p-8 text-center shadow-2xl shadow-black/30 backdrop-blur-xl">
+        <div class="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-lg border border-primary/30 bg-primary/10 text-2xl font-black text-primary">CR</div>
+        <p class="text-sm font-bold uppercase tracking-[0.3em] text-gold">Age Verification</p>
+        <h1 class="mt-3 text-4xl font-black text-white">Celestia Rocks</h1>
+        <p class="mt-4 text-slate-300">You must be 21 or older to enter this alcohol website.</p>
+        <form method="post" class="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+            {% csrf_token %}
+            <button type="submit" name="action" value="yes" class="rounded-lg bg-secondary px-5 py-3 font-black text-white shadow-lg shadow-secondary/20 transition hover:bg-fuchsia-500">
+                Yes, I am
+            </button>
+            <a href="{% url 'access_denied' %}" class="rounded-lg border border-white/10 px-5 py-3 font-bold text-slate-300 transition hover:bg-white/10">
+                No, I am under 21
+            </a>
+        </form>
+    </div>
+</body>
+</html>

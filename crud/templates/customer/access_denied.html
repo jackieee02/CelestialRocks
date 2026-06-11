@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied | Celestia Rocks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        alert: '#FB7185',
+                        gold: '#F8C471',
+                        midnight: '#070812'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="relative flex min-h-screen items-center justify-center overflow-hidden bg-midnight p-4 text-white">
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_15%,rgba(251,113,133,0.18),transparent_30%),linear-gradient(135deg,#070812_0%,#11162b_45%,#090713_100%)]"></div>
+    <div class="relative max-w-md rounded-lg border border-alert/30 bg-alert/10 p-8 text-center shadow-2xl shadow-black/30 backdrop-blur-xl">
+        <p class="text-sm font-bold uppercase tracking-[0.3em] text-gold">Celestia Rocks</p>
+        <h1 class="mt-3 text-4xl font-black text-alert">Access Denied</h1>
+        <p class="mt-4 text-slate-300">You must be 21 or older to access this alcohol website.</p>
+    </div>
+</body>
+</html>

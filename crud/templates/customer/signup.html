@@ -1,0 +1,38 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<section class="mx-auto flex min-h-[72vh] max-w-md items-center">
+    <div class="w-full rounded-lg border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/20 backdrop-blur">
+        <div class="mb-6 text-center">
+            <div class="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-lg border border-primary/30 bg-primary/10 text-base font-black text-primary">CR</div>
+            <h1 class="text-3xl font-black text-white">Create Account</h1>
+            <p class="mt-2 text-sm text-slate-400">Join Celestia Rocks and start your order faster.</p>
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="mb-4 rounded-lg border border-alert/30 bg-alert/10 p-3 text-sm text-rose-100">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+            <div>
+                <label for="{{ field.id_for_label }}" class="mb-2 block text-sm font-semibold text-slate-300">{{ field.label }}</label>
+                <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}" value="{{ field.value|default:'' }}" {% if field.field.required %}required{% endif %} class="w-full rounded-lg border border-white/10 bg-midnight px-4 py-3 text-white outline-none transition placeholder:text-slate-600 focus:border-primary">
+                {% for error in field.errors %}
+                    <p class="mt-2 text-sm text-alert">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="w-full rounded-lg bg-secondary px-4 py-3 font-black text-white shadow-lg shadow-secondary/20 transition hover:bg-fuchsia-500">Create Account</button>
+        </form>
+
+        <p class="mt-5 text-center text-sm text-slate-400">
+            Already have an account?
+            <a href="{% url 'login' %}" class="font-bold text-primary hover:text-cyan-300">Login</a>
+        </p>
+    </div>
+</section>
+{% endblock %}

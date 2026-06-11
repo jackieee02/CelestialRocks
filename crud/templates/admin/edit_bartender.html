@@ -1,0 +1,77 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<div class="p-6 bg-gray-950 min-h-screen text-gray-100">
+    <!-- Breadcrumb -->
+    <nav class="mb-4 text-sm text-gray-400">
+        <a href="{% url 'admin_dashboard' %}" class="hover:text-primary">Dashboard</a> → 
+        <a href="{% url 'manage_bartenders' %}" class="hover:text-primary">Bartenders</a> → 
+        <span class="text-white">Edit Bartender</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="bg-linear-to-r from-purple-900 to-yellow-900 rounded-2xl p-8 mb-8 text-white shadow-2xl border border-gold/30">
+        <h1 class="text-4xl font-black mb-2">👨‍🍳 Staff Management</h1>
+        <p class="text-lg opacity-90">Edit Bartender Profile: <span class="text-gold font-bold">{{ bartender.first_name }} {{ bartender.last_name }}</span></p>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Profile Summary & Form -->
+        <div class="lg:col-span-2 space-y-8">
+            <!-- Summary -->
+            <div class="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700 flex items-center gap-6">
+                {% if bartender.profile_image %}
+                    <img src="{{ bartender.profile_image.url }}" class="w-24 h-24 rounded-full border-4 border-gold shadow-lg object-cover">
+                {% else %}
+                    <div class="w-24 h-24 rounded-full bg-gray-700 border-4 border-gold flex items-center justify-center text-3xl font-black">{{ bartender.username|slice:":2"|upper }}</div>
+                {% endif %}
+                <div>
+                    <h2 class="text-2xl font-bold">{{ bartender.first_name }} {{ bartender.last_name }}</h2>
+                    <p class="text-purple-400">@{{ bartender.username }}</p>
+                    <span class="inline-block mt-2 px-3 py-1 bg-green-900/30 text-green-400 rounded-full text-xs font-bold border border-green-700">🟢 Active Staff</span>
+                </div>
+            </div>
+
+            <!-- Edit Form -->
+            <div class="bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700">
+                <h2 class="text-xl font-bold mb-6 text-white">✏ Profile Information</h2>
+                <form method="post" class="space-y-6" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 [&_input]:w-full [&_input]:p-3 [&_input]:rounded-lg [&_input]:bg-gray-700 [&_input]:border [&_input]:border-gray-600 [&_input]:text-white">
+                        {{ form.as_p }}
+                    </div>
+                    <div class="flex justify-end gap-4 mt-8">
+                        <a href="{% url 'manage_bartenders' %}" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition">Cancel</a>
+                        <button type="submit" class="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg transition">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sidebar Stats -->
+        <div class="space-y-8">
+            <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center">
+                <h3 class="text-gray-400 text-xs uppercase">Orders Completed</h3>
+                <p class="text-4xl font-bold text-white">{{ stats.orders_completed }}</p>
+            </div>
+            
+            <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                <h2 class="text-xl font-bold mb-4 text-purple-400">Performance</h2>
+                <div class="w-full bg-gray-700 rounded-full h-4 mb-2">
+                    <div class="bg-green-500 h-4 rounded-full" style="width: {{ stats.performance }}%"></div>
+                </div>
+                <p class="text-sm text-gray-400">{{ stats.performance }}% Efficiency Score</p>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="bg-red-900/20 p-6 rounded-xl border border-red-900">
+                <h2 class="text-xl font-bold mb-4 text-red-500">⚠ Danger Zone</h2>
+                <form method="post" action="{% url 'delete_bartender' bartender.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded transition">Delete Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

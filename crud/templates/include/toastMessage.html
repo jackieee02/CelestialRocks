@@ -1,0 +1,23 @@
+{% if messages %}
+    <div id="toast-container" class="fixed top-20 right-6 z-50 flex flex-col gap-3">
+        {% for message in messages %}
+            <div class="toast-message flex items-center p-4 mb-4 text-sm rounded-lg shadow-lg border backdrop-blur-md transition duration-500 transform translate-x-0 opacity-100
+                {% if message.tags == 'error' %}bg-red-900/90 border-red-500 text-red-100
+                {% else %}bg-purple-900/90 border-purple-500 text-purple-100{% endif %}" role="alert">
+                <span class="font-medium mr-2">
+                    {% if message.tags == 'error' %}⚠{% else %}✨{% endif %}
+                </span>
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        setTimeout(() => {
+            const container = document.getElementById('toast-container');
+            if (container) {
+                container.style.opacity = '0';
+                setTimeout(() => container.remove(), 500);
+            }
+        }, 5000);
+    </script>
+{% endif %}

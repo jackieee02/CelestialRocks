@@ -1,0 +1,15 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<section class="mx-auto max-w-3xl">
+    <div class="rounded-lg border border-white/10 bg-white/4 p-6 shadow-2xl shadow-black/20">
+        <p class="text-sm font-bold uppercase tracking-[0.3em] text-gold">Seat Management</p>
+        <h1 class="mt-2 text-4xl font-black text-white">Add Seat</h1>
+        <form method="post" class="mt-6 space-y-4 [&_p]:space-y-1 [&_label]:text-sm [&_label]:font-semibold [&_label]:text-slate-300">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="rounded-lg bg-primary px-4 py-3 font-black text-midnight">Save</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

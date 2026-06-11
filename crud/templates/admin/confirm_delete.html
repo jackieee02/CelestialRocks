@@ -1,0 +1,15 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<section class="mx-auto flex min-h-[70vh] max-w-xl items-center">
+    <div class="w-full rounded-lg border border-white/10 bg-white/[0.04] p-6 text-center shadow-2xl shadow-black/20">
+        <p class="text-sm font-bold uppercase tracking-[0.3em] text-gold">Confirm Delete</p>
+        <h1 class="mt-3 text-3xl font-black text-white">Remove this item?</h1>
+        <p class="mt-4 text-slate-300">Are you sure you want to delete {{ object }}?</p>
+        <form method="post" class="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+            {% csrf_token %}
+            <button type="submit" class="rounded-lg border border-alert/30 bg-alert/10 px-5 py-3 font-bold text-alert transition hover:bg-alert hover:text-white">Delete</button>
+            <a href="javascript:history.back()" class="rounded-lg border border-white/10 px-5 py-3 font-bold text-slate-300 transition hover:bg-white/10">Cancel</a>
+        </form>
+    </div>
+</section>
+{% endblock %}

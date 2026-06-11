@@ -1,0 +1,27 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="p-6 bg-gray-900 min-h-screen text-gray-100">
+    <h1 class="text-3xl font-bold mb-6 text-primary">Reserve Your Spot</h1>
+    
+    <!-- Floor Plan Area -->
+    <div class="relative border-4 border-gray-700 bg-gray-950 rounded-lg overflow-hidden" style="width: 100%; height: 700px;">
+        <!-- Environment Elements -->
+        <div class="absolute top-10 left-10 w-40 h-24 bg-gray-800 border-2 border-purple-500 flex items-center justify-center text-purple-400 font-bold">DJ BOOTH</div>
+        <div class="absolute top-20 right-20 w-32 h-64 bg-gray-800 border-2 border-gray-600 flex items-center justify-center text-gray-500 font-bold">BAR</div>
+        
+        <!-- Seats -->
+        {% for seat in seats %}
+            <form method="post" class="absolute">
+                {% csrf_token %}
+                <input type="hidden" name="seat_id" value="{{ seat.id }}">
+                <button type="submit" {% if seat.is_occupied %}disabled{% endif %}
+                        class="{% if seat.is_occupied %}bg-red-600 cursor-not-allowed{% else %}bg-green-600 hover:bg-green-700 cursor-pointer{% endif %} w-16 h-16 rounded-full flex items-center justify-center text-xs shadow-lg transition"
+                        style="left: {{ seat.x_coord }}px; top: {{ seat.y_coord }}px; position: absolute;">
+                    {{ seat.seat_number }}
+                </button>
+            </form>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

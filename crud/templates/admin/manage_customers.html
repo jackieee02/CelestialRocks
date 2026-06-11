@@ -1,0 +1,48 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<section class="mx-auto max-w-6xl space-y-6">
+    <div class="rounded-lg border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/20">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+                <p class="text-sm font-bold uppercase tracking-[0.3em] text-gold">Customer Management</p>
+                <h1 class="mt-2 text-4xl font-black text-white">Manage Customers</h1>
+            </div>
+            <form method="get" class="flex items-center gap-2 rounded-full border border-white/10 bg-midnight/70 p-1.5">
+                <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search customers..." class="w-44 rounded-full border-0 bg-transparent px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:ring-0 sm:w-56">
+                <button type="submit" class="rounded-full bg-primary px-4 py-2 text-sm font-black text-midnight">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] shadow-xl shadow-black/20">
+        <table class="w-full text-left">
+            <thead>
+                <tr>
+                    <th class="p-4">Username</th>
+                    <th class="p-4">Status</th>
+                    <th class="p-4">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/10">
+                {% for customer in customers %}
+                <tr>
+                    <td class="p-4 font-semibold text-white">{{ customer.username }}</td>
+                    <td class="p-4">
+                        <span class="rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] {% if customer.is_banned %}border-alert/30 bg-alert/10 text-alert{% else %}border-primary/30 bg-primary/10 text-primary{% endif %}">
+                            {% if customer.is_banned %}Banned{% else %}Active{% endif %}
+                        </span>
+                    </td>
+                    <td class="p-4">
+                        <a href="{% url 'toggle_ban_customer' customer.id %}" class="rounded-md px-3 py-1.5 text-sm font-semibold {% if customer.is_banned %}border border-primary/30 bg-primary/10 text-primary hover:bg-primary hover:text-midnight{% else %}border border-alert/30 bg-alert/10 text-alert hover:bg-alert hover:text-white{% endif %}">
+                            {% if customer.is_banned %}Unban{% else %}Ban{% endif %}
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="3" class="p-6 text-slate-400">No customers found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

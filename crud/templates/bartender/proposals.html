@@ -1,0 +1,56 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<div class="p-6 bg-gray-950 min-h-screen text-gray-100">
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r from-purple-900 to-yellow-900 rounded-2xl p-8 mb-8 text-white shadow-2xl border border-gold/30">
+        <h1 class="text-4xl font-black mb-2">🍸 Cocktail Innovation Lab</h1>
+        <p class="text-lg opacity-90">Create and submit new signature drink ideas for Celestia Rock.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+        {% for stat in stats %}
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center">
+            <h3 class="text-gray-400 text-xs uppercase">{{ stat.label }}</h3>
+            <p class="text-3xl font-bold text-white">{{ stat.value }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Proposal Form -->
+        <div class="lg:col-span-1 bg-gray-800 rounded-xl p-6 border border-gray-700">
+            <h2 class="text-xl font-bold mb-6 text-yellow-500">✨ Submit New Cocktail</h2>
+            <form method="post" enctype="multipart/form-data" class="space-y-4 [&_input]:w-full [&_input]:p-3 [&_input]:rounded-lg [&_input]:bg-gray-700 [&_textarea]:w-full [&_textarea]:p-3 [&_textarea]:rounded-lg [&_textarea]:bg-gray-700">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-yellow-600 text-white font-bold py-3 rounded-lg hover:opacity-90 transition">Submit Proposal</button>
+            </form>
+        </div>
+
+        <!-- Proposals Gallery -->
+        <div class="lg:col-span-2">
+            <h2 class="text-2xl font-bold mb-6 text-white">Your Proposals</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                {% for prop in proposals %}
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-purple-500 transition shadow-lg">
+                    <h3 class="text-xl font-bold text-primary mb-2">{{ prop.name }}</h3>
+                    <p class="text-sm text-gray-400 mb-4">{{ prop.ingredients }}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold px-3 py-1 rounded-full 
+                            {% if prop.status == 'pending' %}bg-yellow-900 text-yellow-200{% elif prop.status == 'approved' %}bg-green-900 text-green-200{% else %}bg-red-900 text-red-200{% endif %}">
+                            {{ prop.get_status_display }}
+                        </span>
+                        <span class="text-xs text-gray-500">{{ prop.created_at|date:"M d" }}</span>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-span-2 text-center py-10 bg-gray-800 rounded-xl border border-gray-700">
+                    <p class="text-gray-400">No cocktail proposals yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

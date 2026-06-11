@@ -1,0 +1,75 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<div class="p-6 bg-gray-900 min-h-screen text-gray-100">
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r from-purple-700 to-yellow-600 rounded-2xl p-8 mb-8 text-white shadow-lg">
+        <h1 class="text-4xl font-bold mb-2">🛒 Your Order</h1>
+        <p class="text-lg opacity-90">Review your drinks and proceed to seat selection.</p>
+    </div>
+
+    {% if cart_items %}
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Cart Items Section -->
+        <div class="lg:col-span-2 bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-gray-400 border-b border-gray-700">
+                        <th class="p-4">Drink</th>
+                        <th class="p-4">Category</th>
+                        <th class="p-4">Qty</th>
+                        <th class="p-4">Price</th>
+                        <th class="p-4">Subtotal</th>
+                        <th class="p-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr class="border-b border-gray-700 hover:bg-gray-750">
+                        <td class="p-4 flex items-center gap-4">
+                            {% if item.drink.image %}<img src="{{ item.drink.image.url }}" class="w-12 h-12 object-cover rounded-lg">{% endif %}
+                            <span class="font-bold">{{ item.drink.name }}</span>
+                        </td>
+                        <td class="p-4"><span class="bg-purple-900 text-purple-200 px-2 py-1 rounded text-xs">{{ item.drink.category.name }}</span></td>
+                        <td class="p-4 flex items-center gap-2">
+                            <a href="{% url 'update_cart_item' item.drink.id 'remove' %}" class="bg-gray-600 px-2 rounded">-</a>
+                            <span>{{ item.quantity }}</span>
+                            <a href="{% url 'update_cart_item' item.drink.id 'add' %}" class="bg-gray-600 px-2 rounded">+</a>
+                        </td>
+                        <td class="p-4">₱{{ item.drink.price }}</td>
+                        <td class="p-4">₱{{ item.subtotal }}</td>
+                        <td class="p-4"><a href="{% url 'remove_from_cart' item.drink.id %}" class="text-red-400">🗑</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Order Summary Card -->
+        <div class="space-y-6">
+            <div class="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700 sticky top-6">
+                <h2 class="text-xl font-bold mb-4 text-white">Order Summary</h2>
+                <div class="space-y-2 text-gray-300">
+                    <p class="flex justify-between"><span>Items:</span> <span>{{ total_items }}</span></p>
+                    <p class="flex justify-between"><span>Subtotal:</span> <span>₱{{ total_price }}</span></p>
+                    <p class="flex justify-between"><span>Service Fee:</span> <span>₱0</span></p>
+                    <div class="border-t border-gray-700 pt-4 mt-4">
+                        <p class="flex justify-between text-2xl font-bold text-yellow-500"><span>Total:</span> <span>₱{{ total_price }}</span></p>
+                    </div>
+                </div>
+                <div class="mt-8 space-y-3">
+                    <a href="{% url 'menu' %}" class="block w-full text-center py-3 bg-gray-600 hover:bg-gray-500 rounded-lg transition font-bold">Continue Shopping</a>
+                    <a href="{% url 'select_seat' %}" class="block w-full text-center py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg transition">Choose Seat</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Empty Cart State -->
+    <div class="text-center py-20">
+        <h2 class="text-4xl font-bold text-gray-500 mb-4">🍸 No Drinks Yet</h2>
+        <p class="text-gray-400 mb-8">Your cart is empty. Browse the menu and add drinks.</p>
+        <a href="{% url 'menu' %}" class="bg-yellow-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-yellow-700">Browse Menu</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

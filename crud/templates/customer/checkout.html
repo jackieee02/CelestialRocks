@@ -1,0 +1,80 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="p-6 bg-gray-900 min-h-screen text-gray-100">
+    <div class="max-w-5xl mx-auto">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-purple-700 to-yellow-600 rounded-2xl p-8 mb-8 text-white shadow-lg">
+            <h1 class="text-4xl font-bold mb-2">🍸 Order Summary</h1>
+            <p class="text-lg opacity-90">Review your order and confirm your seat reservation.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Receipt Summary -->
+            <div class="lg:col-span-2 bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700">
+                <div class="mb-6 border-b border-gray-700 pb-6">
+                    <h2 class="text-2xl font-bold text-yellow-500">Order #{{ order.id|default:"NEW" }}</h2>
+                    <p class="text-gray-400">Date: {% now "F j, Y" %}</p>
+                    <p class="text-gray-400">Customer: {{ user.first_name }} {{ user.last_name }}</p>
+                </div>
+
+                <table class="w-full mb-8">
+                    <thead>
+                        <tr class="text-gray-400 border-b border-gray-700">
+                            <th class="py-2 text-left">Drink</th>
+                            <th class="py-2 text-center">Qty</th>
+                            <th class="py-2 text-right">Price</th>
+                            <th class="py-2 text-right">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr class="border-b border-gray-700">
+                            <td class="py-3">{{ item.drink.name }}</td>
+                            <td class="py-3 text-center">{{ item.quantity }}</td>
+                            <td class="py-3 text-right">₱{{ item.drink.price }}</td>
+                            <td class="py-3 text-right">₱{{ item.subtotal }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="text-right space-y-2">
+                    <p class="text-gray-400">Subtotal: ₱{{ total_price }}</p>
+                    <p class="text-3xl font-bold text-yellow-500">Total: ₱{{ total_price }}</p>
+                </div>
+            </div>
+
+            <!-- Seat Information & Payment -->
+            <div class="space-y-6">
+                <div class="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
+                    <h2 class="text-xl font-bold mb-4 text-purple-400">Selected Seat</h2>
+                    <div class="bg-gray-700 p-4 rounded-lg text-center mb-4">
+                        <span class="block text-4xl font-bold text-white">{{ seat.seat_number }}</span>
+                        <span class="text-sm text-yellow-500 uppercase tracking-widest">{{ seat.get_seat_type_display }}</span>
+                    </div>
+                    <p class="text-sm text-gray-400">Status: <span class="text-green-500">🟢 Reserved</span></p>
+                </div>
+
+                <div class="bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-700">
+                    <h2 class="text-xl font-bold mb-4 text-white">Payment Method</h2>
+                    <p class="text-lg font-bold text-yellow-500">Cash Payment</p>
+                    <p class="text-sm text-gray-400 mt-2">Please pay directly to the bartender.</p>
+                    <div class="mt-4 p-3 bg-red-900/20 border border-red-900 rounded text-red-200 text-sm italic">
+                        ⚠ Orders will only be prepared after confirmation.
+                    </div>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="flex gap-4">
+                        <a href="{% url 'cart' %}" class="flex-1 text-center py-3 bg-gray-600 hover:bg-gray-500 rounded-lg transition font-bold">Back to Cart</a>
+                        <button type="submit" class="flex-1 py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg transition">Place Order</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

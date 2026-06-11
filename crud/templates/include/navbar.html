@@ -1,0 +1,42 @@
+<nav class="sticky top-0 z-30 border-b border-white/10 bg-midnight/85 px-4 py-3 shadow-2xl shadow-black/30 backdrop-blur-xl sm:px-6">
+    {% if user.is_authenticated and user.role != 'customer' %}
+        <div class="flex items-center justify-between gap-4">
+            <a href="{% if user.role == 'admin' %}{% url 'admin_dashboard' %}{% else %}{% url 'bartender_dashboard' %}{% endif %}" class="group flex items-center gap-3">
+                <span class="grid h-11 w-11 place-items-center rounded-lg border border-primary/30 bg-primary/10 text-lg font-black text-primary shadow-lg shadow-primary/10">CR</span>
+                <span>
+                    <span class="block text-lg font-black tracking-wide text-white">Celestia Rocks</span>
+                    <span class="block text-xs uppercase tracking-[0.28em] text-gold">Staff Portal</span>
+                </span>
+            </a>
+            <div class="flex items-center gap-3 text-sm">
+                <span class="hidden rounded-full border border-white/10 bg-white/5 px-3 py-1 text-slate-300 sm:inline">Logged in as {{ user.username }} - {{ user.role }}</span>
+                <a href="{% url 'logout' %}" class="rounded-lg border border-alert/40 px-3 py-2 font-semibold text-alert transition hover:bg-alert hover:text-white">Logout</a>
+            </div>
+        </div>
+    {% else %}
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <a href="{% url 'home' %}" class="flex items-center gap-3">
+                <span class="grid h-11 w-11 place-items-center rounded-lg border border-primary/30 bg-primary/10 text-lg font-black text-primary shadow-lg shadow-primary/10">CR</span>
+                <span>
+                    <span class="block text-lg font-black tracking-wide text-white">Celestia Rocks</span>
+                    <span class="block text-xs uppercase tracking-[0.28em] text-gold">Cosmic Bar</span>
+                </span>
+            </a>
+            <div class="flex flex-wrap items-center gap-2 text-sm font-semibold text-slate-200">
+                <a href="{% url 'home' %}" class="rounded-lg px-3 py-2 transition hover:bg-white/10 hover:text-primary">Home</a>
+                <a href="{% url 'menu' %}" class="rounded-lg px-3 py-2 transition hover:bg-white/10 hover:text-primary">Menu</a>
+                <a href="{% url 'about' %}" class="rounded-lg px-3 py-2 transition hover:bg-white/10 hover:text-primary">About</a>
+                {% if user.is_authenticated and user.role == 'customer' %}
+                <a href="{% url 'order_status' %}" class="rounded-lg px-3 py-2 transition hover:bg-white/10 hover:text-primary">Order History</a>
+                {% endif %}
+                <a href="{% url 'cart' %}" class="rounded-lg px-3 py-2 transition hover:bg-white/10 hover:text-primary">Cart</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="rounded-lg border border-alert/40 px-3 py-2 text-alert transition hover:bg-alert hover:text-white">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="rounded-lg px-3 py-2 transition hover:bg-white/10 hover:text-primary">Login</a>
+                <a href="{% url 'signup' %}" class="rounded-lg bg-secondary px-4 py-2 text-white shadow-lg shadow-secondary/20 transition hover:bg-fuchsia-500">Signup</a>
+            {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</nav>

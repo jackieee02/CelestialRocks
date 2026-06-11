@@ -1,0 +1,39 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<section class="mx-auto max-w-7xl space-y-6">
+    <div class="rounded-lg border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-black/20">
+        <p class="text-sm font-bold uppercase tracking-[0.3em] text-gold">Order Management</p>
+        <h1 class="mt-2 text-4xl font-black text-white">Manage Orders</h1>
+    </div>
+
+    <div class="overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] shadow-xl shadow-black/20">
+        <table class="w-full text-left">
+            <thead>
+                <tr>
+                    <th class="p-4">ID</th>
+                    <th class="p-4">Customer</th>
+                    <th class="p-4">Seat</th>
+                    <th class="p-4">Status</th>
+                    <th class="p-4">Total</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/10">
+                {% for order in orders %}
+                <tr>
+                    <td class="p-4 text-slate-200">{{ order.id }}</td>
+                    <td class="p-4 font-semibold text-white">{{ order.customer.username }}</td>
+                    <td class="p-4 text-slate-200">{{ order.seat_reservation.seat.seat_number }}</td>
+                    <td class="p-4">
+                        <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-slate-200">{{ order.get_status_display }}</span>
+                    </td>
+                    <td class="p-4 font-bold text-primary">${{ order.total_price }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="p-6 text-slate-400">No orders found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

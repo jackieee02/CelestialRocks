@@ -1,0 +1,78 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="p-6 bg-gray-900 min-h-screen text-gray-100">
+    <!-- Hero Header -->
+    <div class="bg-linear-to-r from-purple-700 to-yellow-600 rounded-2xl p-8 mb-8 text-white shadow-lg">
+        <h1 class="text-4xl font-bold mb-2">🍹 Add New Drink</h1>
+        <p class="text-lg opacity-90">Add a new drink to the Celestia Rock menu.</p>
+    </div>
+
+    <!-- Form Container -->
+    <div class="max-w-5xl mx-auto bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700">
+        <form method="post" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {% csrf_token %}
+            
+            <!-- Left Column: Form Fields -->
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Drink Name</label>
+                    {{ form.name }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Category</label>
+                    {{ form.category }}
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Price (₱)</label>
+                    {{ form.price }}
+                </div>
+                <!-- Availability (assuming model field exists, if not, skip) -->
+                <div class="flex items-center gap-4">
+                    <label class="block text-sm font-medium text-gray-300">Availability</label>
+                    <div class="flex items-center gap-2 text-green-500">
+                        <input type="radio" name="available" value="true" checked> Available
+                    </div>
+                    <div class="flex items-center gap-2 text-red-500">
+                        <input type="radio" name="available" value="false"> Unavailable
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Image Upload & Preview -->
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Drink Image</label>
+                    <div class="border-2 border-dashed border-gray-600 rounded-xl p-6 text-center hover:border-yellow-500 transition cursor-pointer">
+                        {{ form.image }}
+                        <p class="text-sm text-gray-400 mt-2">Drag image here or click to browse</p>
+                    </div>
+                </div>
+                <!-- Preview Card Placeholder -->
+                <div id="preview" class="hidden bg-gray-700 p-4 rounded-lg border border-gray-600">
+                    <p class="text-xs text-gray-400 mb-2">Live Preview</p>
+                    <div id="image-preview" class="w-full h-32 bg-gray-600 rounded mb-2 flex items-center justify-center">No Image</div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="lg:col-span-2 flex justify-end gap-4 mt-6">
+                <a href="{% url 'manage_menu' %}" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition">Cancel</a>
+                <button type="submit" class="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg transition">Save Drink</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    input[type="text"], input[type="number"], select {
+        width: 100%;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        background-color: #374151;
+        border: 1px solid #4b5563;
+        color: white;
+    }
+    input:focus { outline: 2px solid #d4af37; }
+</style>
+{% endblock %}

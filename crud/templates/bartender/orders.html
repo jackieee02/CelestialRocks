@@ -1,0 +1,66 @@
+{% extends 'layout/base.html' %}
+{% load custom_filters %}
+{% block content %}
+<div class="p-6 bg-gray-950 min-h-screen text-gray-100">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-black text-white">🍸 Order Management</h1>
+            <p class="text-gray-400">Monitor and manage customer drink orders in real time.</p>
+        </div>
+        <div class="flex gap-4">
+            <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 text-center">
+                <span class="block text-xs uppercase text-gray-400">Active</span>
+                <p class="text-2xl font-bold">{{ active_count }}</p>
+            </div>
+            <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 text-center">
+                <span class="block text-xs uppercase text-gray-400">Pending</span>
+                <p class="text-2xl font-bold text-yellow-500">{{ pending_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kanban Board -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {% for status_name, status_key, color in board_columns %}
+        <div class="bg-gray-900 p-4 rounded-xl border-t-4 border-{{ color }}-500 shadow-xl">
+            <h2 class="text-lg font-bold mb-4 flex justify-between">
+                {{ status_name }}
+                <span class="bg-gray-800 px-2 py-0.5 rounded text-xs">{{ status_counts|get_item:status_key }}</span>
+            </h2>
+            <div class="space-y-4">
+                {% for order in orders %}
+                {% if order.status == status_key %}
+                <div class="bg-gray-800 p-4 rounded-lg shadow border border-gray-700 hover:border-{{ color }}-500 transition">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="font-bold text-white">Order #{{ order.id }}</span>
+                        <span class="text-xl font-black bg-gray-900 px-2 py-1 rounded border border-gray-600 text-gold">{{ order.seat_reservation.seat.seat_number }}</span>
+                    </div>
+                    <p class="text-sm text-gray-300">{{ order.customer.username }}</p>
+                    <p class="text-xs text-gray-500 mb-2">{{ order.created_at|date:"g:i A" }}</p>
+                    <div class="text-sm text-gray-400 mb-4">
+                        {% for item in order.items.all %}
+                        <p>{{ item.quantity }} × {{ item.drink.name }}</p>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2">
+                        {% if order.status == 'pending' %}
+                        <a href="{% url 'update_order_status' order.id 'preparing' %}" class="bg-purple-600 hover:bg-purple-500 text-white px-3 py-1 rounded text-xs font-bold transition">Accept</a>
+                        {% endif %}
+                        {% if order.status == 'preparing' %}
+                        <a href="{% url 'update_order_status' order.id 'completed' %}" class="bg-green-600 hover:bg-green-500 text-white px-3 py-1 rounded text-xs font-bold transition">Mark as Done</a>
+                        {% endif %}
+                        {% if order.status != 'completed' and order.status != 'cancelled' %}
+                        <a href="{% url 'update_order_status' order.id 'cancelled' %}" class="bg-red-900 hover:bg-red-800 text-white px-3 py-1 rounded text-xs font-bold transition">Cancel</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

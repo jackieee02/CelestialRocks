@@ -1,0 +1,123 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="p-6 bg-gray-900 min-h-screen text-gray-100">
+    <!-- Breadcrumb -->
+    <nav class="mb-4 text-sm text-gray-400">
+        <a href="{% url 'admin_dashboard' %}" class="hover:text-primary">Dashboard</a> → 
+        <a href="{% url 'manage_inventory' %}" class="hover:text-primary">Inventory</a> → 
+        <span class="text-white">Edit Ingredient</span>
+    </nav>
+
+    <!-- Hero Header -->
+    <div class="bg-linear-to-r from-purple-700 to-yellow-600 rounded-2xl p-8 mb-8 text-white shadow-lg">
+        <h1 class="text-4xl font-bold mb-2">📦 Inventory Management</h1>
+        <p class="text-lg opacity-90">Edit Ingredient: {{ object.name }}</p>
+        <p class="mt-2 text-sm">Update inventory information, stock levels, and ingredient details.</p>
+    </div>
+
+    <!-- Inventory Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-700">
+            <h3 class="text-gray-400 text-xs uppercase">Current Stock</h3>
+            <p class="text-2xl font-bold">{{ object.stock_level }} Units</p>
+        </div>
+        <div class="bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-700">
+            <h3 class="text-gray-400 text-xs uppercase">Minimum Stock</h3>
+            <p class="text-2xl font-bold">{{ object.low_stock_threshold }} Units</p>
+        </div>
+        <div class="bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-700">
+            <h3 class="text-gray-400 text-xs uppercase">Stock Status</h3>
+            <p class="text-2xl font-bold {% if object.stock_level < object.low_stock_threshold %}text-red-500{% else %}text-green-500{% endif %}">
+                {% if object.stock_level < object.low_stock_threshold %}🔴 Low{% else %}🟢 Healthy{% endif %}
+            </p>
+        </div>
+        <div class="bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-700">
+            <h3 class="text-gray-400 text-xs uppercase">Last Updated</h3>
+            <p class="text-2xl font-bold">{% now "F j, Y" %}</p>
+        </div>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Ingredient Form Card -->
+        <div class="lg:col-span-2 bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700">
+            <h2 class="text-xl font-bold mb-6 text-white">Ingredient Details</h2>
+            <form method="post" class="space-y-6" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="space-y-4 [&_input]:w-full [&_input]:p-3 [&_input]:rounded-lg [&_input]:bg-gray-700 [&_input]:border [&_input]:border-gray-600 [&_input]:text-white">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Ingredient Name</label>
+                        {{ form.name }}
+                    </div>
+                    <div id="div_id_image">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Image</label>
+                        {{ form.image }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Current Stock</label>
+                        {{ form.stock_level }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Minimum Stock Level</label>
+                        {{ form.low_stock_threshold }}
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-end gap-4 mt-8">
+                    <a href="{% url 'manage_inventory' %}" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition">Cancel</a>
+                    <button type="submit" class="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg transition">Save Changes</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Overview & Widgets -->
+        <div class="space-y-8">
+            <!-- Ingredient Overview -->
+            <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700">
+                <h2 class="text-xl font-bold mb-4 text-purple-400">Ingredient Overview</h2>
+                {% if object.image %}
+                    <img src="{{ object.image.url }}" alt="{{ object.name }}" class="w-full h-32 object-cover rounded-lg mb-4">
+                {% endif %}
+                <p class="text-gray-300">Name: <span class="font-bold text-white">{{ object.name }}</span></p>
+                <p class="text-gray-300">Current Stock: <span class="font-bold text-white">{{ object.stock_level }} Units</span></p>
+                
+                <!-- Stock Health Widget -->
+                <div class="mt-6">
+                    <div class="flex justify-between text-sm mb-1">
+                        <span>Stock Health</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2.5">
+                        <div class="{% if object.stock_level < object.low_stock_threshold %}bg-red-500{% else %}bg-green-500{% endif %} h-2.5 rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Card -->
+            <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700">
+                <h2 class="text-xl font-bold mb-4 text-yellow-500">Recent Activity</h2>
+                <ul class="text-sm text-gray-400 space-y-2">
+                    <li>• Inventory levels updated</li>
+                    <li>• Image modified</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    input:focus { outline: 2px solid #d4af37; }
+    /* Hide the 'Currently' text and 'Clear' checkbox */
+    #div_id_image {
+        font-size: 0;
+    }
+    #div_id_image input[type="file"] {
+        font-size: 1rem;
+    }
+    input[name="image-clear"], label[for="image-clear_id"] {
+        display: none !important;
+    }
+</style>
+{% endblock %}

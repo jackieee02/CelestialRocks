@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Celestia Rocks{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#67E8F9',
+                        secondary: '#D946EF',
+                        alert: '#FB7185',
+                        gold: '#F8C471',
+                        midnight: '#070812',
+                        nebula: '#14122A',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        input, select, textarea {
+            background: rgba(7, 8, 18, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 0.5rem;
+            color: #f8fafc;
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #67E8F9;
+            box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.14);
+        }
+
+        table {
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        td {
+            color: #e2e8f0;
+        }
+
+        main .bg-gray-900 {
+            background: transparent !important;
+        }
+
+        main .bg-gray-800,
+        main .bg-gray-700 {
+            background: rgba(255, 255, 255, 0.045) !important;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+        }
+
+        main .border-gray-700 {
+            border-color: rgba(255, 255, 255, 0.10) !important;
+        }
+
+        main .text-gray-400,
+        main .text-gray-300 {
+            color: #94a3b8 !important;
+        }
+
+        main .text-purple-500,
+        main .text-blue-400 {
+            color: #67E8F9 !important;
+        }
+
+        main .text-yellow-500,
+        main .text-red-500 {
+            color: #F8C471 !important;
+        }
+
+        main .bg-purple-600,
+        main .bg-purple-700,
+        main .bg-yellow-600,
+        main .bg-red-600,
+        main .bg-red-900 {
+            background: rgba(217, 70, 239, 0.16) !important;
+            color: #fff !important;
+        }
+
+        main .hover\:bg-purple-700:hover,
+        main .hover\:bg-yellow-700:hover,
+        main .hover\:bg-red-800:hover,
+        main .hover\:bg-gray-600:hover,
+        main .hover\:bg-gray-700:hover {
+            filter: brightness(1.08);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-midnight text-slate-100 selection:bg-secondary/40 selection:text-white">
+    <div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(103,232,249,0.20),transparent_30%),radial-gradient(circle_at_80%_0%,rgba(217,70,239,0.18),transparent_28%),linear-gradient(135deg,#070812_0%,#11162b_45%,#090713_100%)]"></div>
+        <div class="absolute inset-0 opacity-35 bg-[radial-gradient(circle,rgba(255,255,255,0.55)_1px,transparent_1.5px)] [background-size:34px_34px]"></div>
+        <div class="absolute left-1/2 top-24 h-72 w-72 -translate-x-1/2 rounded-full bg-gold/10 blur-3xl"></div>
+    </div>
+    {% include 'include/navbar.html' %}
+    
+    <div class="flex">
+        {% if user.is_authenticated and user.role != 'customer' %}
+            {% include 'include/sidebar.html' %}
+        {% endif %}
+        <main class="flex-1 p-4 sm:p-6 lg:p-8">
+            {% include 'include/toastMessage.html' %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>
