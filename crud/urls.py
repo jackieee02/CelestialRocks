@@ -20,7 +20,6 @@ urlpatterns = [
     path('select-seat/', views.select_seat, name='select_seat'),
     path('checkout/', views.checkout, name='checkout'),
     path('bartender/dashboard/', views.bartender_dashboard, name='bartender_dashboard'),
-    path('bartender/dashboard/', views.bartender_dashboard, name='bartender_dashboard'),
     path('bartender/profile/', views.bartender_profile, name='bartender_profile'),
     path('bartender/profile/edit/', views.bartender_edit_profile, name='bartender_edit_profile'),
     path('bartender/seats/', views.bartender_seats, name='bartender_seats'),

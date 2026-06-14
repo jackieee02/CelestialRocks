@@ -73,7 +73,11 @@
                         <td class="p-4"><span class="bg-purple-900 text-purple-200 px-2 py-1 rounded text-xs">{{ drink.category.name }}</span></td>
                         <td class="p-4">₱{{ drink.price }}</td>
                         <td class="p-4">
-                            <span class="text-green-500 text-xs">🟢 Available</span>
+                            {% if drink.is_available %}
+                                <span class="text-green-500 text-xs font-bold">🟢 Available</span>
+                            {% else %}
+                                <span class="text-red-500 text-xs font-bold">🔴 Unavailable</span>
+                            {% endif %}
                         </td>
                         <td class="p-4 text-sm text-gray-400">{{ drink.created_at|date:"F j, Y"|default:"-" }}</td>
                         <td class="p-4 flex gap-3">

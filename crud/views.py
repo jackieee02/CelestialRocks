@@ -33,7 +33,7 @@ def menu(request):
     sort = request.GET.get('sort', 'featured')
 
     categories = Category.objects.all().order_by('name')
-    drinks = Drink.objects.select_related('category').all()
+    drinks = Drink.objects.select_related('category').filter(is_available=True)
 
     if query:
         drinks = drinks.filter(name__icontains=query)
@@ -50,8 +50,8 @@ def menu(request):
     else:
         drinks = drinks.order_by('category__name', 'name')
 
-    featured_drinks = list(Drink.objects.select_related('category').order_by('-id')[:6])
-    recommended_drinks = list(Drink.objects.select_related('category').order_by('-id')[:4])
+    featured_drinks = list(Drink.objects.select_related('category').filter(is_available=True).order_by('-id')[:6])
+    recommended_drinks = list(Drink.objects.select_related('category').filter(is_available=True).order_by('-id')[:4])
 
     cart = request.session.get('cart', {})
     cart_item_count = sum(cart.values())
@@ -415,7 +415,7 @@ def manage_menu(request):
     stats = {
         'total_drinks': drinks.count(),
         'total_categories': categories.count(),
-        'available_drinks': drinks.count(), # Simplify for prototype
+        'available_drinks': drinks.filter(is_available=True).count(),
         'avg_price': drinks.aggregate(models.Avg('price'))['price__avg'] or 0
     }
     
@@ -498,7 +498,13 @@ def seat_designer(request):
     for seat in seats:
         seat.is_occupied = seat.id in occupied_ids
     
-    return render(request, 'admin/seat_designer.html', {'seats': seats})
+    stats = {
+        'total': seats.count(),
+        'available': seats.filter(is_active=True).count() - len(occupied_ids),
+        'occupied': len(occupied_ids)
+    }
+    
+    return render(request, 'admin/seat_designer.html', {'seats': seats, 'stats': stats})
 
 @login_required
 @csrf_exempt

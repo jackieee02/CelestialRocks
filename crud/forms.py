@@ -81,7 +81,11 @@ class EditBartenderForm(forms.ModelForm):
 class SeatForm(forms.ModelForm):
     class Meta:
         model = Seat
-        fields = ['seat_number', 'is_active', 'seat_type', 'x_coord', 'y_coord']
+        fields = ['seat_number', 'capacity', 'seat_type', 'is_active', 'x_coord', 'y_coord']
+        widgets = {
+            'seat_type': forms.RadioSelect(),
+            'is_active': forms.CheckboxInput(),
+        }
 
 class DrinkProposalForm(forms.ModelForm):
     class Meta:

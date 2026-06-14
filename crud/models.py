@@ -18,11 +18,10 @@ class Seat(models.Model):
     TYPE_CHOICES = (
         ('regular', 'Regular Table'),
         ('vip', 'VIP Booth'),
-        ('bar', 'Bar Seat'),
-        ('lounge', 'Private Lounge'),
     )
     seat_number = models.CharField(max_length=10, unique=True)
     is_active = models.BooleanField(default=True)
+    capacity = models.IntegerField(default=4)
     seat_type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='regular')
     x_coord = models.IntegerField(default=0)
     y_coord = models.IntegerField(default=0)

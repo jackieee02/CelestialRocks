@@ -29,7 +29,7 @@ def seed_data(apps, schema_editor):
 
     # Seed Users
     bartender = User.objects.create_user(username='bartender1', role='bartender', password='password123')
-    customer = User.objects.create_user(username='customer1', role='customer')
+    customer = User.objects.create_user(username='customer1', role='customer', password='password123')
 
     # Seed Seats
     seat = Seat.objects.create(seat_number='VIP-01', is_active=True, seat_type='vip', x_coord=100, y_coord=100)

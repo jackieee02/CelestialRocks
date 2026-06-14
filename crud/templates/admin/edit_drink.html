@@ -1,71 +1,163 @@
 {% extends 'layout/base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="p-6 bg-gray-950 min-h-screen text-gray-100">
+    <!-- Breadcrumb -->
+    <nav class="mb-4 text-sm text-gray-400">
+        <a href="{% url 'admin_dashboard' %}" class="hover:text-primary">Dashboard</a> → 
+        <a href="{% url 'manage_menu' %}" class="hover:text-primary">Menu</a> → 
+        <span class="text-white">Edit Drink</span>
+    </nav>
+
     <!-- Hero Header -->
     <div class="bg-gradient-to-r from-purple-900 to-yellow-900 rounded-2xl p-8 mb-8 text-white shadow-2xl border border-gold/30">
-        <h1 class="text-4xl font-black mb-2">✏ Edit Drink</h1>
-        <p class="text-lg opacity-90">Modify details for "{{ drink.name }}"</p>
+        <p class="text-sm font-bold uppercase tracking-[0.3em] text-gold mb-2">Menu Management</p>
+        <h1 class="text-4xl font-black mb-2">Edit Drink</h1>
+        <p class="text-lg opacity-90 italic">Modify details for "{{ drink.name }}"</p>
     </div>
 
-    <!-- Main Content -->
-    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Edit Form -->
-        <div class="bg-gray-800 rounded-xl shadow-lg p-8 border border-gray-700">
-            <h2 class="text-xl font-bold mb-6 text-white">Drink Details</h2>
-            <form method="post" class="space-y-6" enctype="multipart/form-data">
-                {% csrf_token %}
-                
-                <div class="space-y-4 [&_input]:w-full [&_input]:p-3 [&_input]:rounded-lg [&_input]:bg-gray-700 [&_input]:border [&_input]:border-gray-600 [&_input]:text-white [&_select]:w-full [&_select]:p-3 [&_select]:rounded-lg [&_select]:bg-gray-700 [&_select]:border [&_select]:border-gray-600 [&_select]:text-white [&_label]:block [&_label]:text-sm [&_label]:font-medium [&_label]:text-gray-300 [&_label]:mb-2">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Drink Name</label>
-                        {{ form.name }}
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Category</label>
-                        {{ form.category }}
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Price (₱)</label>
-                        {{ form.price }}
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Image</label>
-                        {{ form.image }}
-                    </div>
-                    <div class="flex items-center gap-3">
-                        {{ form.is_available }}
-                        <label class="text-sm font-medium text-gray-300">Available on Menu</label>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex justify-end gap-4 mt-8">
-                    <a href="{% url 'manage_menu' %}" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-lg transition">Cancel</a>
-                    <button type="submit" class="px-6 py-2 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg transition">Save Changes</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Preview -->
-        <div class="space-y-8">
+    <!-- Top Section: Preview & Info -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <!-- Drink Preview Card -->
+        <div class="lg:col-span-2 relative group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] shadow-2xl backdrop-blur-sm">
             {% if drink.image %}
-            <div class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700">
-                <h2 class="text-xl font-bold mb-4 text-purple-400">Current Drink</h2>
-                <img src="{{ drink.image.url }}" alt="{{ drink.name }}" class="w-full h-64 object-cover rounded-lg">
-                <div class="mt-4">
-                    <p class="text-2xl font-bold text-white">{{ drink.name }}</p>
-                    <p class="text-gray-400">{{ drink.category.name }}</p>
-                    <p class="text-gold font-bold text-lg">₱{{ drink.price }}</p>
+                <img src="{{ drink.image.url }}" alt="{{ drink.name }}" class="h-80 w-full object-cover transition-transform duration-700 group-hover:scale-105">
+            {% else %}
+                <div class="h-80 w-full bg-gray-800 flex items-center justify-center text-gray-500 font-bold uppercase tracking-widest">No Image Available</div>
+            {% endif %}
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent"></div>
+            <div class="absolute bottom-0 left-0 p-8 w-full flex justify-between items-end">
+                <div>
+                    <span class="inline-block px-3 py-1 rounded-full bg-purple-600/20 border border-purple-500/50 text-purple-300 text-xs font-bold uppercase tracking-widest mb-3">{{ drink.category.name }}</span>
+                    <h2 class="text-4xl font-black text-white leading-none">{{ drink.name }}</h2>
+                    <p class="mt-2 text-2xl font-bold text-gold">₱{{ drink.price }}</p>
+                </div>
+                <div>
+                    {% if drink.is_available %}
+                        <span class="px-4 py-2 rounded-full bg-green-900/40 border border-green-500/50 text-green-400 text-sm font-bold shadow-lg shadow-green-500/10">🟢 Available</span>
+                    {% else %}
+                        <span class="px-4 py-2 rounded-full bg-red-900/40 border border-red-500/50 text-red-400 text-sm font-bold shadow-lg shadow-red-500/10">🔴 Unavailable</span>
+                    {% endif %}
                 </div>
             </div>
-            {% endif %}
         </div>
+
+        <!-- Quick Information Card -->
+        <div class="bg-gray-800/40 rounded-2xl border border-white/10 p-6 backdrop-blur-xl flex flex-col justify-center">
+            <h3 class="text-xs font-black uppercase tracking-[0.2em] text-gray-500 mb-6">Quick Overview</h3>
+            <div class="space-y-6">
+                <div>
+                    <p class="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Category</p>
+                    <p class="text-lg font-bold text-white">{{ drink.category.name }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Standard Price</p>
+                    <p class="text-xl font-black text-gold">₱{{ drink.price }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Inventory Creation</p>
+                    <p class="text-white font-medium">{{ drink.created_at|date:"F j, Y" }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Current Visibility</p>
+                    <p class="font-bold {% if drink.is_available %}text-green-400{% else %}text-red-400{% endif %}">
+                        {% if drink.is_available %}Active on Menu{% else %}Hidden from Customers{% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Form Card -->
+    <div class="bg-gray-800 rounded-2xl shadow-2xl p-10 border border-gray-700 relative">
+        <h2 class="text-2xl font-bold mb-8 text-white flex items-center gap-3">
+            <span class="text-gold">✏</span> Drink Information
+        </h2>
+        <form method="post" enctype="multipart/form-data" class="space-y-8">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 [&_input]:w-full [&_input]:p-4 [&_input]:rounded-xl [&_input]:bg-gray-900/50 [&_input]:border [&_input]:border-white/10 [&_input]:text-white [&_select]:w-full [&_select]:p-4 [&_select]:rounded-xl [&_select]:bg-gray-900/50 [&_select]:border [&_select]:border-white/10 [&_select]:text-white [&_label]:block [&_label]:text-sm [&_label]:font-bold [&_label]:text-gray-400 [&_label]:mb-3 [&_label]:uppercase [&_label]:tracking-wider">
+                <div class="md:col-span-1">
+                    <label for="{{ form.name.id_for_label }}">Drink Name</label>
+                    {{ form.name }}
+                </div>
+                <div class="md:col-span-1">
+                    <label for="{{ form.category.id_for_label }}">Category</label>
+                    {{ form.category }}
+                </div>
+                <div class="md:col-span-1">
+                    <label for="{{ form.price.id_for_label }}">Price (₱)</label>
+                    {{ form.price }}
+                </div>
+                <div class="md:col-span-1">
+                    <label for="{{ form.image.id_for_label }}">Drink Image</label>
+                    <div class="relative group">
+                        {{ form.image }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Availability Section -->
+            <div class="space-y-4 pt-6 border-t border-white/5">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-gray-400">Menu Availability</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Available Option -->
+                    <label class="relative flex flex-col p-6 rounded-xl border border-white/10 bg-gray-900/30 cursor-pointer transition-all hover:bg-gray-800/50 hover:border-green-500/30 group">
+                        <input type="radio" name="is_available" value="True" class="hidden peer" {% if form.is_available.value == True or form.is_available.value == 'True' %}checked{% endif %}>
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-4 h-4 rounded-full border-2 border-gray-600 peer-checked:border-green-500 flex items-center justify-center">
+                                <div class="w-2 h-2 rounded-full bg-green-500 scale-0 peer-checked:scale-100 transition-transform"></div>
+                            </div>
+                            <span class="font-bold text-white group-hover:text-green-400 transition-colors">🟢 Available</span>
+                        </div>
+                        <p class="text-xs text-gray-500">Customers can view and order this drink on the digital menu.</p>
+                        <!-- Selector Indicator (Tailwind Peer) -->
+                        <div class="absolute inset-0 rounded-xl border-2 border-transparent pointer-events-none peer-checked:border-green-500/50 peer-checked:shadow-[0_0_20px_rgba(34,197,94,0.1)] transition-all"></div>
+                    </label>
+
+                    <!-- Unavailable Option -->
+                    <label class="relative flex flex-col p-6 rounded-xl border border-white/10 bg-gray-900/30 cursor-pointer transition-all hover:bg-gray-800/50 hover:border-red-500/30 group">
+                        <input type="radio" name="is_available" value="False" class="hidden peer" {% if form.is_available.value == False or form.is_available.value == 'False' %}checked{% endif %}>
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-4 h-4 rounded-full border-2 border-gray-600 peer-checked:border-red-500 flex items-center justify-center">
+                                <div class="w-2 h-2 rounded-full bg-red-500 scale-0 peer-checked:scale-100 transition-transform"></div>
+                            </div>
+                            <span class="font-bold text-white group-hover:text-red-400 transition-colors">🔴 Unavailable</span>
+                        </div>
+                        <p class="text-xs text-gray-500">Drink is hidden from customers and cannot be ordered.</p>
+                        <!-- Selector Indicator (Tailwind Peer) -->
+                        <div class="absolute inset-0 rounded-xl border-2 border-transparent pointer-events-none peer-checked:border-red-500/50 peer-checked:shadow-[0_0_20px_rgba(239,68,68,0.1)] transition-all"></div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap justify-end items-center gap-4 mt-12">
+                <a href="{% url 'manage_menu' %}" class="px-8 py-3 rounded-xl border border-white/10 text-gray-400 font-bold hover:bg-white/5 hover:text-white transition uppercase tracking-widest text-sm">Cancel</a>
+                <button type="submit" class="px-10 py-3 rounded-xl bg-gradient-to-r from-yellow-600 to-yellow-500 text-black font-black uppercase tracking-widest text-sm shadow-xl shadow-yellow-600/20 hover:scale-[1.02] active:scale-95 transition-all">Save Changes</button>
+            </div>
+        </form>
     </div>
 </div>
 
 <style>
-    input:focus, select:focus { outline: 2px solid #d4af37; }
-    input[type="checkbox"] { accent-color: #d4af37; }
+    /* Radio logic using sibling selector for hiding native inputs and styling custom states */
+    input[type="radio"]:checked + div > div.border-2 {
+        border-color: currentColor;
+    }
+    /* Specific radio selection colors */
+    input[value="True"]:checked ~ div.flex > div.border-2 { border-color: #22c55e; }
+    input[value="True"]:checked ~ div.flex > div > div.bg-green-500 { transform: scale(1); }
+    
+    input[value="False"]:checked ~ div.flex > div.border-2 { border-color: #ef4444; }
+    input[value="False"]:checked ~ div.flex > div > div.bg-red-500 { transform: scale(1); }
+
+    /* Input Focus States */
+    input:focus, select:focus {
+        outline: none;
+        border-color: #d4af37 !important;
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+    }
 </style>
 {% endblock %}
